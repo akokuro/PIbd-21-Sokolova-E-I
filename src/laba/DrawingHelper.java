@@ -6,16 +6,11 @@ import javax.swing.JPanel;
 
 public class DrawingHelper extends JPanel {
 
-	private IShip ship;
-
-	public void addShip(IShip ship) {
-		this.ship = ship;
-	}
-
+	public Dock<IShip> Docker;
+	
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		if (ship != null)
-			ship.DrawShip(g);
+		Docker.Draw(g);
 	}
 }
