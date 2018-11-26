@@ -1,90 +1,70 @@
-package laba_1;
+package laba;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
-import javax.swing.JPanel;
-
-public class Ship {
-	// Левая координата отрисовки коробля
-	private float _startPosX;
-	// Правая кооридната отрисовки коробля
-	private float _startPosY;
-	// Ширина окна отрисовки
-	private int _pictureWidth;
-	// Высота окна отрисовки
-	private int _pictureHeight;
+public class Ship_Liner extends Ship {
 	// Ширина отрисовки коробля
 	private int shipWidth = 100;
 	// Ширина отрисовки коробля
 	private int shipHeight = 60;
-	// Максимальная скорость
-	public int MaxSpeed;
-	// Вес коробля
-	public float Weight;
-	// Основной цвет
-	public Color MainColor;
+
 	// Дополнительный цвет
 	public Color DopColor;
+
+	public Color getDopColor() {
+		return DopColor;
+	}
+
+	public void setDopColor(Color value) {
+		DopColor = value;
+	}
+
 	// Признак наличия трубы
 	public boolean Pipe;
-	// Признак наличия боковых спойлеров
+
+	public boolean getPipe() {
+		return Pipe;
+	}
+
+	public void setPipe(boolean value) {
+		Pipe = value;
+	}
+
+	// Признак наличия дыма из трубы
 	public boolean SmokeFromPipe;
+
+	public boolean getSmokeFromPipe() {
+		return SmokeFromPipe;
+	}
+
+	public void setSmokeFromPipe(boolean value) {
+		SmokeFromPipe = value;
+	}
+
 	// Признак наличия окон
 	public boolean Window;
 
+	public boolean getWindow() {
+		return Window;
+	}
+
+	public void setWindow(boolean value) {
+		Window = value;
+	}
+
 	// Конструктор
-	public Ship(int maxSpeed, float weight, Color mainColor, Color dopColor, boolean pipe, boolean smokeFromPipe,
+	public Ship_Liner(int maxSpeed, float weight, Color mainColor, Color dopColor, boolean pipe, boolean smokeFromPipe,
 			boolean window) {
-		MaxSpeed = maxSpeed;
-		Weight = weight;
-		MainColor = mainColor;
+		super(maxSpeed, weight, mainColor);
 		DopColor = dopColor;
 		Pipe = pipe;
 		SmokeFromPipe = smokeFromPipe;
 		Window = window;
 	}
 
-	// Установка позиции коробля
-	public void SetPosition(int x, int y, int width, int height) {
-		_startPosX = x;
-		_startPosY = y;
-		_pictureWidth = width;
-		_pictureHeight = height;
-	}
-
-	// Изменение направления пермещения
-	public void MoveTransport(Direction direction) {
-		float step = MaxSpeed / Weight;
-		switch (direction) {
-		// вправо
-		case Right:
-			if (_startPosX + step < _pictureWidth - shipWidth) {
-				_startPosX += step;
-			}
-			break;
-		// влево
-		case Left:
-			if (_startPosX - step > 0) {
-				_startPosX -= step;
-			}
-			break;
-		// вверх
-		case Up:
-			if (_startPosY - step > shipHeight) {
-				_startPosY -= step;
-			}
-			break;
-		// вниз
-		case Down:
-			if (_startPosY + step < _pictureHeight) {
-				_startPosY += step;
-			}
-			break;
-		}
-	}
-
 	// Отрисовка коробля
+	@Override
 	public void DrawShip(Graphics g) {
 		// отрисуем сперва трубу
 		if (Pipe) {
