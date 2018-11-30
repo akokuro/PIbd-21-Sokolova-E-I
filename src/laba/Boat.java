@@ -29,4 +29,10 @@ public abstract class Boat implements IShip {
 	public abstract void DrawShip(Graphics g);
 
 	public abstract void MoveTransport(Direction direction);
+	
+	public void SetMainColor(Color color)
+	 {
+	 MainColor = color;
+	 }
+
 }

@@ -26,7 +26,6 @@ public class FormDock {
 
 	private JFrame frame;
 	private final DrawingHelper panel_Dock = new DrawingHelper();
-	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
 	// объект от класса многоуровнего дока
@@ -35,6 +34,8 @@ public class FormDock {
 	public IShip ship;
 	// количество уровней
 	private final int countLevel = 5;
+	private FormShipConfig select;
+	private static JList list;
 
 	/**
 	 * Launch the application.
@@ -59,9 +60,21 @@ public class FormDock {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
+	public void getShip() {
+		select = new FormShipConfig(frame);
+		if (select.res()) {
+			IShip ship = select.ship;
+			int temp = list.getSelectedIndex();
+			if(temp == -1) {
+				temp = 0;
+			}
+			int place = dock.getAt(temp).Add(ship);
+			if (place < 0) {
+				JOptionPane.showMessageDialog(null, "No free place");
+			}
+		}
+	}
+
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 995, 649);
@@ -73,7 +86,7 @@ public class FormDock {
 		dock = new MultiLevelDock(countLevel, panel_Dock.getWidth(), panel_Dock.getHeight());
 		panel_Dock.Docker = dock.getAt(0);
 
-		JList list = new JList();
+		list = new JList();
 		list.setBounds(834, 11, 135, 93);
 		frame.getContentPane().add(list);
 		DefaultListModel listModel = new DefaultListModel();
@@ -82,53 +95,24 @@ public class FormDock {
 			listModel.addElement("\u0423\u0440\u043E\u0432\u0435\u043D\u044C " + Integer.toString(i + 1));
 		}
 		ListSelectionListener listSelectionListener = new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-            	panel_Dock.Docker = dock.getAt(list.getSelectedIndex()); 
-                panel_Dock.repaint();
-            }
-        };
-        list.addListSelectionListener(listSelectionListener);
-        
-		JButton button_set_Ship = new JButton("\u041A\u043E\u0440\u0430\u0431\u043B\u044C");
-		button_set_Ship.addActionListener(new ActionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				panel_Dock.Docker = dock.getAt(list.getSelectedIndex());
+				panel_Dock.repaint();
+			}
+		};
+		list.addListSelectionListener(listSelectionListener);
+
+		JButton button_order = new JButton(
+				"\u0417\u0430\u043A\u0430\u0437\u0430\u0442\u044C \u043A\u043E\u0440\u0430\u0431\u043B\u044C");
+		button_order.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Color MainColor = JColorChooser.showDialog(null, "Выбирете цвет", Color.WHITE);
-				ship = new Ship(50 + (int) (Math.random() * 300), 1000 + (int) (Math.random() * 2000), MainColor);
-				 int place = dock.getAt(list.getSelectedIndex()).Add(ship);
-	                if (place == -1) {
-	                    JOptionPane.showMessageDialog(null, "Нет свободных мест");
-	                }
+				getShip();
 				panel_Dock.repaint();
 			}
 		});
-		button_set_Ship.setBounds(834, 134, 135, 37);
-		frame.getContentPane().add(button_set_Ship);
-
-		textField = new JTextField();
-		textField.setEditable(false);
-		textField.setBackground(SystemColor.menu);
-		textField.setText("\u041F\u0440\u0438\u0448\u0432\u0430\u0440\u0442\u043E\u0432\u0430\u0442\u044C:");
-		textField.setBounds(850, 115, 104, 20);
-		frame.getContentPane().add(textField);
-		textField.setColumns(10);
-
-		JButton button_set_Liner = new JButton("\u041B\u0430\u0439\u043D\u0435\u0440");
-		button_set_Liner.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Color MainColor = JColorChooser.showDialog(null, "Выбирете основной цвет", Color.WHITE);
-				Color DopColor = JColorChooser.showDialog(null, "Выбирете дополнительный цвет", Color.WHITE);
-				ship = new Ship_Liner(50 + (int) (Math.random() * 300), 1000 + (int) (Math.random() * 2000), MainColor,
-						DopColor, true, true, true);
-				int place = dock.getAt(list.getSelectedIndex()).Add(ship);
-                if (place == -1) {
-                    JOptionPane.showMessageDialog(null, "Нет свободных мест");
-                }
-				panel_Dock.repaint();
-			}
-		});
-		button_set_Liner.setBounds(834, 182, 135, 37);
-		frame.getContentPane().add(button_set_Liner);
+		button_order.setBounds(834, 126, 135, 37);
+		frame.getContentPane().add(button_order);
 
 		textField_1 = new JTextField();
 		textField_1.setEditable(false);
@@ -158,7 +142,7 @@ public class FormDock {
 		button_Take.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (textIndex.getText() != "") {
-					IShip ship =  dock.getAt(list.getSelectedIndex()).Del(Integer.parseInt(textIndex.getText()));
+					IShip ship = dock.getAt(list.getSelectedIndex()).Del(Integer.parseInt(textIndex.getText()));
 					if (ship != null) {
 						ship.SetPosition(panel_takeShip.getWidth() - 110, panel_takeShip.getHeight() - 50,
 								panel_takeShip.getWidth(), panel_takeShip.getHeight());

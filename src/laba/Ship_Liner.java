@@ -12,46 +12,14 @@ public class Ship_Liner extends Ship {
 	// Дополнительный цвет
 	public Color DopColor;
 
-	public Color getDopColor() {
-		return DopColor;
-	}
-
-	public void setDopColor(Color value) {
-		DopColor = value;
-	}
-
 	// Признак наличия трубы
 	public boolean Pipe;
-
-	public boolean getPipe() {
-		return Pipe;
-	}
-
-	public void setPipe(boolean value) {
-		Pipe = value;
-	}
 
 	// Признак наличия дыма из трубы
 	public boolean SmokeFromPipe;
 
-	public boolean getSmokeFromPipe() {
-		return SmokeFromPipe;
-	}
-
-	public void setSmokeFromPipe(boolean value) {
-		SmokeFromPipe = value;
-	}
-
 	// Признак наличия окон
 	public boolean Window;
-
-	public boolean getWindow() {
-		return Window;
-	}
-
-	public void setWindow(boolean value) {
-		Window = value;
-	}
 
 	// Конструктор
 	public Ship_Liner(int maxSpeed, float weight, Color mainColor, Color dopColor, boolean pipe, boolean smokeFromPipe,
@@ -86,7 +54,7 @@ public class Ship_Liner extends Ship {
 		g.drawLine((int) _startPosX, (int) _startPosY - 25, (int) _startPosX + 90, (int) _startPosY - 25);
 		g.setColor(Color.RED);
 		g.drawLine((int) _startPosX + 5, (int) _startPosY - 13, (int) _startPosX + 85, (int) _startPosY - 13);
-		g.setColor(Color.BLACK);
+		g.setColor(MainColor);
 		g.drawRect((int) _startPosX + 10, (int) _startPosY - 35, 70, 10);
 
 		// рисуем окна
@@ -101,5 +69,9 @@ public class Ship_Liner extends Ship {
 			g.fillOval((int) _startPosX + 75, (int) _startPosY - 23, 7, 7);
 			g.fillOval((int) _startPosX + 5, (int) _startPosY - 23, 7, 7);
 		}
+	}
+
+	public void SetDopColor(Color color) {
+		DopColor = color;
 	}
 }
