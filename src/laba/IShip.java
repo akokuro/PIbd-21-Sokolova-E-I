@@ -16,4 +16,5 @@ public interface IShip {
 	
 	//Установление основного цвета
 	void SetMainColor(Color color);
+
 }
