@@ -55,14 +55,14 @@ public class Ship extends Boat {
 	public void DrawShip(Graphics g) {
 
 		// отрисуем корабль
-		g.setColor(Color.BLACK);
+		g.setColor(MainColor);
 		g.drawLine((int) _startPosX + 10, (int) _startPosY, (int) _startPosX + 80, (int) _startPosY);
 		g.drawLine((int) _startPosX + 10, (int) _startPosY, (int) _startPosX, (int) _startPosY - 25);
 		g.drawLine((int) _startPosX + 80, (int) _startPosY, (int) _startPosX + 90, (int) _startPosY - 25);
 		g.drawLine((int) _startPosX, (int) _startPosY - 25, (int) _startPosX + 90, (int) _startPosY - 25);
 		g.setColor(Color.RED);
 		g.drawLine((int) _startPosX + 5, (int) _startPosY - 13, (int) _startPosX + 85, (int) _startPosY - 13);
-		g.setColor(Color.BLACK);
+		g.setColor(MainColor);
 		g.drawRect((int) _startPosX + 10, (int) _startPosY - 35, 70, 10);
 	}
 }

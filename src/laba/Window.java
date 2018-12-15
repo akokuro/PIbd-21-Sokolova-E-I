@@ -29,22 +29,6 @@ public class Window {
 	public DrawingHelper picturePanelShip;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Window window = new Window();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the application.
 	 * 
 	 * @throws IOException
@@ -85,7 +69,7 @@ public class Window {
 		frame.getContentPane().add(buttonCreateShip);
 
 		BufferedImage buttonIconUp = ImageIO
-				.read(new File("D:\\All Kurai\\Универ\\2 курс\\Технологии программирования\\стрелка вверх.jpg"));
+				.read(new File("D:\\All Kurai\\Г“Г­ГЁГўГҐГ°\\2 ГЄГіГ°Г±\\Г’ГҐГµГ­Г®Г«Г®ГЈГЁГЁ ГЇГ°Г®ГЈГ°Г Г¬Г¬ГЁГ°Г®ГўГ Г­ГЁГї\\Г±ГІГ°ГҐГ«ГЄГ  ГўГўГҐГ°Гµ.jpg"));
 		JButton buttonUp = new JButton(new ImageIcon(buttonIconUp));
 		buttonUp.addMouseListener(new MouseAdapter() {
 			@Override
@@ -98,7 +82,7 @@ public class Window {
 		frame.getContentPane().add(buttonUp);
 
 		BufferedImage buttonIconLeft = ImageIO
-				.read(new File("D:\\All Kurai\\Универ\\2 курс\\Технологии программирования\\стрелка влево.jpg"));
+				.read(new File("D:\\All Kurai\\Г“Г­ГЁГўГҐГ°\\2 ГЄГіГ°Г±\\Г’ГҐГµГ­Г®Г«Г®ГЈГЁГЁ ГЇГ°Г®ГЈГ°Г Г¬Г¬ГЁГ°Г®ГўГ Г­ГЁГї\\Г±ГІГ°ГҐГ«ГЄГ  ГўГ«ГҐГўГ®.jpg"));
 		JButton buttonLeft = new JButton(new ImageIcon(buttonIconLeft));
 		buttonLeft.addMouseListener(new MouseAdapter() {
 			@Override
@@ -111,7 +95,7 @@ public class Window {
 		frame.getContentPane().add(buttonLeft);
 
 		BufferedImage buttonIconRight = ImageIO
-				.read(new File("D:\\All Kurai\\Универ\\2 курс\\Технологии программирования\\стрелка вправо.jpg"));
+				.read(new File("D:\\All Kurai\\Г“Г­ГЁГўГҐГ°\\2 ГЄГіГ°Г±\\Г’ГҐГµГ­Г®Г«Г®ГЈГЁГЁ ГЇГ°Г®ГЈГ°Г Г¬Г¬ГЁГ°Г®ГўГ Г­ГЁГї\\Г±ГІГ°ГҐГ«ГЄГ  ГўГЇГ°Г ГўГ®.jpg"));
 		JButton buttonRight = new JButton(new ImageIcon(buttonIconRight));
 		buttonRight.addMouseListener(new MouseAdapter() {
 			@Override
@@ -124,7 +108,7 @@ public class Window {
 		frame.getContentPane().add(buttonRight);
 
 		BufferedImage buttonIconDown = ImageIO
-				.read(new File("D:\\All Kurai\\Универ\\2 курс\\Технологии программирования\\стрелка вниз.jpg"));
+				.read(new File("D:\\All Kurai\\Г“Г­ГЁГўГҐГ°\\2 ГЄГіГ°Г±\\Г’ГҐГµГ­Г®Г«Г®ГЈГЁГЁ ГЇГ°Г®ГЈГ°Г Г¬Г¬ГЁГ°Г®ГўГ Г­ГЁГї\\Г±ГІГ°ГҐГ«ГЄГ  ГўГ­ГЁГ§.jpg"));
 		JButton buttonDown = new JButton(new ImageIcon(buttonIconDown));
 		buttonDown.addMouseListener(new MouseAdapter() {
 			@Override

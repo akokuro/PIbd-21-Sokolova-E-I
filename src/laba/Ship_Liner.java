@@ -68,18 +68,18 @@ public class Ship_Liner extends Ship {
 	public void DrawShip(Graphics g) {
 		// отрисуем сперва трубу
 		if (Pipe) {
-			g.setColor(Color.BLUE);
+			g.setColor(MainColor);
 			g.fillRect((int) _startPosX + 60, (int) _startPosY - 50, 10, 15);
 		}
 		// и дым
 		if (SmokeFromPipe) {
-			g.setColor(DopColor);
+			g.setColor(Color.GRAY);
 			g.fillOval((int) _startPosX + 57, (int) _startPosY - 47, 2, 2);
 			g.fillOval((int) _startPosX + 52, (int) _startPosY - 44, 3, 3);
 			g.fillOval((int) _startPosX + 43, (int) _startPosY - 42, 5, 5);
 		}
 		// теперь отрисуем основную часть корабля
-		g.setColor(Color.BLACK);
+		g.setColor(MainColor);
 		g.drawLine((int) _startPosX + 10, (int) _startPosY, (int) _startPosX + 80, (int) _startPosY);
 		g.drawLine((int) _startPosX + 10, (int) _startPosY, (int) _startPosX, (int) _startPosY - 25);
 		g.drawLine((int) _startPosX + 80, (int) _startPosY, (int) _startPosX + 90, (int) _startPosY - 25);
@@ -89,9 +89,9 @@ public class Ship_Liner extends Ship {
 		g.setColor(Color.BLACK);
 		g.drawRect((int) _startPosX + 10, (int) _startPosY - 35, 70, 10);
 
-		// рисуем задний спойлер автомобиля
+		// рисуем окна
 		if (Window) {
-			g.setColor(Color.BLUE);
+			g.setColor(DopColor);
 			g.fillOval((int) _startPosX + 45, (int) _startPosY - 23, 7, 7);
 			g.fillOval((int) _startPosX + 35, (int) _startPosY - 23, 7, 7);
 			g.fillOval((int) _startPosX + 55, (int) _startPosY - 23, 7, 7);
