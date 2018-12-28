@@ -31,6 +31,21 @@ public class Ship_Liner extends Ship {
 		Window = window;
 	}
 
+	// Перегрузка конструктора с предоставлением информации
+	public Ship_Liner(String info) {
+		super(info);
+		String[] strs = info.split(";", 0);
+		if (strs.length == 7) {
+			MaxSpeed = Integer.parseInt(strs[0]);
+			Weight = Integer.parseInt(strs[1]);
+			MainColor = getColorByName(strs[2]);
+			DopColor = getColorByName(strs[3]);
+			Pipe = strs[4].equals("true");
+			SmokeFromPipe = strs[5].equals("true");
+			Window = strs[6].equals("true");
+		}
+	}
+
 	// Отрисовка коробля
 	@Override
 	public void DrawShip(Graphics g) {
@@ -74,4 +89,11 @@ public class Ship_Liner extends Ship {
 	public void SetDopColor(Color color) {
 		DopColor = color;
 	}
+	
+	//преобразование информации в строку
+	public String toString()
+	 {
+	 return super.toString() + ";" + getColorName(DopColor) + ";" + Pipe + ";" +
+	SmokeFromPipe + ";" + Window;
+	 }
 }

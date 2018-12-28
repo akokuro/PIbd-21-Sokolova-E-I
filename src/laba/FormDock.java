@@ -9,6 +9,8 @@ import java.awt.Color;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import java.awt.SystemColor;
 import javax.swing.JTextArea;
@@ -21,6 +23,13 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JScrollPane;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileFilter;
 
 public class FormDock {
 
@@ -36,6 +45,10 @@ public class FormDock {
 	private final int countLevel = 5;
 	private FormShipConfig select;
 	private static JList list;
+	private JMenuBar menuBar;
+	private JMenu menu;
+	private JMenuItem menuItem_Save;
+	private JMenuItem menuItem_Load;
 
 	/**
 	 * Launch the application.
@@ -65,7 +78,7 @@ public class FormDock {
 		if (select.res()) {
 			IShip ship = select.ship;
 			int temp = list.getSelectedIndex();
-			if(temp == -1) {
+			if (temp == -1) {
 				temp = 0;
 			}
 			int place = dock.getAt(temp).Add(ship);
@@ -158,5 +171,73 @@ public class FormDock {
 		button_Take.setBounds(865, 311, 89, 23);
 		frame.getContentPane().add(button_Take);
 
+		menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
+
+		menu = new JMenu("\u0424\u0430\u0439\u043B");
+		menuBar.add(menu);
+
+		menuItem_Save = new JMenuItem("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C");
+		menuItem_Save.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				JFileChooser fc = new JFileChooser();
+				fc.setFileFilter(new MyFilter());
+				int returnVal = fc.showOpenDialog(frame); // Where frame is the parent component
+
+				File file = null;
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					file = fc.getSelectedFile();
+					if (dock.SaveData(file.getPath())) {
+						JOptionPane.showMessageDialog(null, "Сохранение прошло успешно", "Результат",
+								JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog(null, "Не сохранилось", "Результат",
+								JOptionPane.INFORMATION_MESSAGE);
+					}
+
+				}
+			}
+		});
+		menu.add(menuItem_Save);
+
+		menuItem_Load = new JMenuItem("\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C");
+		menuItem_Load.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				JFileChooser fc = new JFileChooser();
+				fc.setFileFilter(new MyFilter());
+				int returnVal = fc.showOpenDialog(frame); // Where frame is the parent component
+
+				File file = null;
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					file = fc.getSelectedFile();
+					if (dock.LoadData(file.getPath())) {
+						JOptionPane.showMessageDialog(null, "Загрузили", "Результат", JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog(null, "Не загрузили", "Результат",
+								JOptionPane.INFORMATION_MESSAGE);
+					}
+				}
+				panel_Dock.repaint();
+			}
+		});
+		menu.add(menuItem_Load);
+
 	}
+}
+
+class MyFilter extends javax.swing.filechooser.FileFilter {
+
+	@Override
+	public boolean accept(File arg0) {
+		if (arg0.getName().lastIndexOf('.') == -1)
+			return true;
+		return arg0.getName().substring(arg0.getName().lastIndexOf('.')).equals(".txt");
+	}
+	@Override
+	public String getDescription() {
+		return null;
+	}
+	
 }

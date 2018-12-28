@@ -24,23 +24,6 @@ public class Dock<T extends IShip> {
 	// Максимальное количество мест
 	private int _maxCount;
 
-	// Геттеры и сеттеры для PictureWudth и PictureHeight.
-	public int getPictureWidth() {
-		return PictureWidth;
-	}
-
-	public void setPictureWidth(int pictureWidth) {
-		PictureWidth = pictureWidth;
-	}
-
-	public int getPictureHeight() {
-		return PictureHeight;
-	}
-
-	public void setPictureHeight(int pictureHeight) {
-		PictureHeight = pictureHeight;
-	}
-
 	// Конструктор дока.
 	public Dock(int size, int pictureWidth, int pictureHeight) {
 		_maxCount = size;
@@ -69,25 +52,25 @@ public class Dock<T extends IShip> {
 
 	// Оператор "-": забрать корабль
 	public T Del(int index) {
-		if (!CheckFreePlace(index))
-        {
-            T ship = _places.get(index);
-            _places.remove(index);
-            return ship;
-        }
-        return null;	}
+		if (!CheckFreePlace(index)) {
+			T ship = _places.get(index);
+			_places.remove(index);
+			return ship;
+		}
+		return null;
+	}
 
 	// Проверить по номеру места, свободно ли оно
 	private boolean CheckFreePlace(int index) {
-		 return !_places.containsKey(index);
+		return !_places.containsKey(index);
 	}
 
 	// Отрисовка дока
 	public void Draw(Graphics g) {
 		DrawMarking(g);
-		 for (T ship: _places.values()) {
-	            ship.DrawShip(g);
-	        }
+		for (T ship : _places.values()) {
+			ship.DrawShip(g);
+		}
 	}
 
 	// Отрисовка линий
@@ -102,6 +85,22 @@ public class Dock<T extends IShip> {
 				g.drawLine(j * _placeSizeWidth, i * _placeSizeHeight, j * _placeSizeWidth,
 						i * _placeSizeHeight + _placeSizeHeight);
 			}
+		}
+	}
+
+	public T getAt(int index) {
+
+		if (_places.containsKey(index)) {
+			return _places.get(index);
+		}
+		return null;
+	}
+
+	public void setAt(int index, T ship) {
+		if (CheckFreePlace(index)) {
+			ship.SetPosition(5 + index / 5 * _placeSizeWidth + 5, index % 5 * _placeSizeHeight + 80,
+					PictureWidth, PictureHeight);
+			_places.put(index, ship);
 		}
 	}
 }
