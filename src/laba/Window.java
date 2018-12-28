@@ -27,23 +27,7 @@ public class Window {
 	private JFrame frame;
 	public IShip ship;
 	public DrawingHelper picturePanelShip;
-
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					FormDock window = new FormDock();
-//					window.frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-
+	
 	/**
 	 * Create the application.
 	 * 
