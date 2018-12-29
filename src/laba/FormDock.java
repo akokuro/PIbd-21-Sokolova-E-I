@@ -30,6 +30,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileFilter;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class FormDock {
 
@@ -49,7 +52,8 @@ public class FormDock {
 	private JMenu menu;
 	private JMenuItem menuItem_Save;
 	private JMenuItem menuItem_Load;
-
+	private static Logger logger = Logger.getLogger(FormDock.class.getName());
+	private static int place;
 	/**
 	 * Launch the application.
 	 */
@@ -59,6 +63,11 @@ public class FormDock {
 				try {
 					FormDock window = new FormDock();
 					window.frame.setVisible(true);
+					FileHandler fh;
+					fh = new FileHandler("D://loggerJava.txt");
+					logger.addHandler(fh);
+					SimpleFormatter formatter = new SimpleFormatter();
+					fh.setFormatter(formatter);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -73,7 +82,7 @@ public class FormDock {
 		initialize();
 	}
 
-	public void getShip() {
+	public void getShip() throws DockOverFlowException {
 		select = new FormShipConfig(frame);
 		if (select.res()) {
 			IShip ship = select.ship;
@@ -81,10 +90,8 @@ public class FormDock {
 			if (temp == -1) {
 				temp = 0;
 			}
-			int place = dock.getAt(temp).Add(ship);
-			if (place < 0) {
-				JOptionPane.showMessageDialog(null, "No free place");
-			}
+			place = dock.getAt(temp).Add(ship);
+			logger.info("Добавлен корабль " + ship.toString() + " на место " + place);
 		}
 	}
 
@@ -120,8 +127,15 @@ public class FormDock {
 				"\u0417\u0430\u043A\u0430\u0437\u0430\u0442\u044C \u043A\u043E\u0440\u0430\u0431\u043B\u044C");
 		button_order.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				getShip();
-				panel_Dock.repaint();
+				try {
+					getShip();
+					panel_Dock.repaint();
+				} catch (DockOverFlowException e) {
+					JOptionPane.showMessageDialog(null, "Переполнение", "Результат", JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "Неизвестная ошибка", "Результат",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
 			}
 		});
 		button_order.setBounds(834, 126, 135, 37);
@@ -155,17 +169,23 @@ public class FormDock {
 		button_Take.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (textIndex.getText() != "") {
-					IShip ship = dock.getAt(list.getSelectedIndex()).Del(Integer.parseInt(textIndex.getText()));
-					if (ship != null) {
+					try {
+						IShip ship = null;
+						ship = dock.getAt(list.getSelectedIndex()).Del(Integer.parseInt(textIndex.getText()));
 						ship.SetPosition(panel_takeShip.getWidth() - 110, panel_takeShip.getHeight() - 50,
 								panel_takeShip.getWidth(), panel_takeShip.getHeight());
 						((DrawingTake) panel_takeShip).addShip(ship);
-					} else {
-						((DrawingTake) panel_takeShip).addShip(null);
+						logger.info("Изъят корабль " + ship.toString() + " с места "
+								+ Integer.parseInt(textIndex.getText()));
+						panel_Dock.repaint();
+						panel_takeShip.repaint();
+					} catch (DockNotFoundException ex) {
+						JOptionPane.showMessageDialog(null, "Не найдено", "Результат", JOptionPane.INFORMATION_MESSAGE);
+					} catch (Exception ex) {
+						JOptionPane.showMessageDialog(null, "Неизвестная ошибка", "Результат",
+								JOptionPane.INFORMATION_MESSAGE);
 					}
 				}
-				panel_Dock.repaint();
-				panel_takeShip.repaint();
 			}
 		});
 		button_Take.setBounds(865, 311, 89, 23);
@@ -188,11 +208,13 @@ public class FormDock {
 				File file = null;
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					file = fc.getSelectedFile();
-					if (dock.SaveData(file.getPath())) {
+					try {
+						dock.SaveData(file.getPath());
 						JOptionPane.showMessageDialog(null, "Сохранение прошло успешно", "Результат",
 								JOptionPane.INFORMATION_MESSAGE);
-					} else {
-						JOptionPane.showMessageDialog(null, "Не сохранилось", "Результат",
+						logger.info("Сохранено в файл " + file.getName());
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(null, "Неизвестная ошибка при сохранении", "Результат",
 								JOptionPane.INFORMATION_MESSAGE);
 					}
 
@@ -212,9 +234,14 @@ public class FormDock {
 				File file = null;
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					file = fc.getSelectedFile();
-					if (dock.LoadData(file.getPath())) {
+					try {
+						dock.LoadData(file.getPath());
 						JOptionPane.showMessageDialog(null, "Загрузили", "Результат", JOptionPane.INFORMATION_MESSAGE);
-					} else {
+						logger.info("Загружено из файла " + file.getName());
+					} catch (DockOccupiedPlaceException ex) {
+						JOptionPane.showMessageDialog(null, "Занятое место", "Результат",
+								JOptionPane.INFORMATION_MESSAGE);
+					} catch (Exception ex) {
 						JOptionPane.showMessageDialog(null, "Не загрузили", "Результат",
 								JOptionPane.INFORMATION_MESSAGE);
 					}
@@ -235,9 +262,10 @@ class MyFilter extends javax.swing.filechooser.FileFilter {
 			return true;
 		return arg0.getName().substring(arg0.getName().lastIndexOf('.')).equals(".txt");
 	}
+
 	@Override
 	public String getDescription() {
 		return null;
 	}
-	
+
 }

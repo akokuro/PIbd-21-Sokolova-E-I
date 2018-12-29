@@ -33,9 +33,9 @@ public class Dock<T extends IShip> {
 	}
 
 	// Оператор "+": поставить корабль
-	public int Add(T ship) {
+	public int Add(T ship) throws DockOverFlowException {
 		if (_places.size() == _maxCount) {
-			return -1;
+			throw new DockOverFlowException();
 		}
 
 		for (int i = 0; i < _maxCount; i++) {
@@ -51,13 +51,13 @@ public class Dock<T extends IShip> {
 	}
 
 	// Оператор "-": забрать корабль
-	public T Del(int index) {
+	public T Del(int index) throws DockNotFoundException {
 		if (!CheckFreePlace(index)) {
 			T ship = _places.get(index);
 			_places.remove(index);
 			return ship;
 		}
-		return null;
+		throw new DockNotFoundException(index);
 	}
 
 	// Проверить по номеру места, свободно ли оно
@@ -88,19 +88,22 @@ public class Dock<T extends IShip> {
 		}
 	}
 
-	public T getAt(int index) {
+	public T getAt(int index) throws DockNotFoundException {
 
 		if (_places.containsKey(index)) {
 			return _places.get(index);
 		}
-		return null;
+		throw new DockNotFoundException(index);
 	}
 
-	public void setAt(int index, T ship) {
+	public void setAt(int index, T ship) throws DockOccupiedPlaceException {
 		if (CheckFreePlace(index)) {
 			ship.SetPosition(5 + index / 5 * _placeSizeWidth + 5, index % 5 * _placeSizeHeight + 80,
 					PictureWidth, PictureHeight);
 			_places.put(index, ship);
+		}
+		else {
+			throw new DockOccupiedPlaceException(index);
 		}
 	}
 }

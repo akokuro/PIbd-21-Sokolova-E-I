@@ -49,112 +49,98 @@ public class MultiLevelDock {
 		}
 	}
 
-	public boolean SaveData(String filename) {
+	public void SaveData(String filename) throws DockNotFoundException, FileNotFoundException {
 		File file = new File(filename);
 		if (file.exists()) {
 			file.delete();
 		}
 		FileOutputStream fs;
-		try {
-			fs = new FileOutputStream(filename);
-			// «аписываем количество уровней
-			WriteToFile("CountLeveles:" + dockStages.size() + "\r\n", fs);
-			for (Dock<IShip> level : dockStages) {
-				// Ќачинаем уровень
-				WriteToFile("Level" + "\r\n", fs);
-				for (int i = 0; i < countPlaces; i++) {
+		fs = new FileOutputStream(filename);
+		// «аписываем количество уровней
+		WriteToFile("CountLeveles:" + dockStages.size() + "\r\n", fs);
+		for (Dock<IShip> level : dockStages) {
+			// Ќачинаем уровень
+			WriteToFile("Level" + "\r\n", fs);
+			for (int i = 0; i < countPlaces; i++) {
+				try {
 					IShip ship = level.getAt(i);
 					if (ship != null) {
 						// если место не пустое
-						// «аписываем тип мшаины
+						// «аписываем тип корабл€
 						if (ship instanceof Ship_Liner) {
 							WriteToFile(i + ":Ship_Liner:", fs);
-						}else if (ship instanceof Ship) {
+						} else if (ship instanceof Ship) {
 							WriteToFile(i + ":Ship:", fs);
 						}
-						
+
 						// «аписываемые параметры
 						System.out.println(ship.toString() + "\r\n");
 						WriteToFile(ship.toString() + "\r\n", fs);
 
 					}
+				} finally {
 				}
 			}
-
-			return true;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		}
-		return false;
 	}
 
-	public Boolean LoadData(String filename) {
-		try {
-			File file = new File(filename);
-			if (!file.exists()) {
-				return false;
-			}
-			String bufferTextFromFile = "";
-			FileInputStream fn;
-
-			fn = new FileInputStream(filename);
-
-			int i = -1;
-			int size = 0;
-			while ((i = fn.read()) != -1) {
-				size++;
-			}
-			char[] b = new char[size];
-			fn = new FileInputStream(filename);
-			int j = 0;
-			while ((i = fn.read()) != -1) {
-				b[j] = (char) i;
-				j++;
-			}
-
-			bufferTextFromFile = new String(b);
-
-			bufferTextFromFile = bufferTextFromFile.replace("\r", "");
-			String[] strs = bufferTextFromFile.split("\n", 0);
-			if (strs[0].contains("CountLeveles")) {
-				// считываем количество уровней
-				int count = Integer.parseInt(strs[0].split(":", 0)[1]);
-				if (dockStages != null) {
-					dockStages.clear();
-				}
-				dockStages = new ArrayList<Dock<IShip>>(count);
-			} else {
-				// если нет такой записи, то это не те данные
-				return false;
-			}
-			int counter = -1;
-			IShip ship = null;
-			for (int k = 1; k < strs.length; ++k) {
-				// идем по считанным запис€м
-				if (strs[k].equals("Level")) {
-					// начинаем новый уровень
-					counter++;
-					dockStages.add(new Dock<IShip>(countPlaces, pictureWidth, pictureHeight));
-					continue;
-				}
-				if (strs[k] == null || strs[k].isEmpty()) {
-					continue;
-				}
-				if (strs[k].contains("Ship_Liner")) {
-					ship = new Ship_Liner(strs[k].split(":", 0)[2]);
-				} else if (strs[k].contains("Ship")) {
-					ship = new Ship(strs[k].split(":", 0)[2]);
-				}
-				dockStages.get(counter).setAt(Integer.parseInt(strs[k].split(":", 0)[0]), ship);
-			}
-
-			return true;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+	public void LoadData(String filename) throws Exception {
+		File file = new File(filename);
+		if (!file.exists()) {
+			throw new FileNotFoundException();
 		}
-		return false;
-	}
+		String bufferTextFromFile = "";
+		FileInputStream fn;
 
+		fn = new FileInputStream(filename);
+
+		int i = -1;
+		int size = 0;
+		while ((i = fn.read()) != -1) {
+			size++;
+		}
+		char[] b = new char[size];
+		fn = new FileInputStream(filename);
+		int j = 0;
+		while ((i = fn.read()) != -1) {
+			b[j] = (char) i;
+			j++;
+		}
+
+		bufferTextFromFile = new String(b);
+
+		bufferTextFromFile = bufferTextFromFile.replace("\r", "");
+		String[] strs = bufferTextFromFile.split("\n", 0);
+		if (strs[0].contains("CountLeveles")) {
+			// считываем количество уровней
+			int count = Integer.parseInt(strs[0].split(":", 0)[1]);
+			if (dockStages != null) {
+				dockStages.clear();
+			}
+			dockStages = new ArrayList<Dock<IShip>>(count);
+		} else {
+			// если нет такой записи, то это не те данные
+			throw new Exception("Ќеверный формат файла");
+		}
+		int counter = -1;
+		IShip ship = null;
+		for (int k = 1; k < strs.length; ++k) {
+			// идем по считанным запис€м
+			if (strs[k].equals("Level")) {
+				// начинаем новый уровень
+				counter++;
+				dockStages.add(new Dock<IShip>(countPlaces, pictureWidth, pictureHeight));
+				continue;
+			}
+			if (strs[k] == null || strs[k].isEmpty()) {
+				continue;
+			}
+			if (strs[k].contains("Ship_Liner")) {
+				ship = new Ship_Liner(strs[k].split(":", 0)[2]);
+			} else if (strs[k].contains("Ship")) {
+				ship = new Ship(strs[k].split(":", 0)[2]);
+			}
+			dockStages.get(counter).setAt(Integer.parseInt(strs[k].split(":", 0)[0]), ship);
+		}
+	}
 }
