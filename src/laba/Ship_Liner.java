@@ -2,8 +2,9 @@ package laba;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.Serializable;
 
-public class Ship_Liner extends Ship {
+public class Ship_Liner extends Ship implements Serializable {
 	// Ширина отрисовки коробля
 	private int shipWidth = 100;
 	// Ширина отрисовки коробля
@@ -89,11 +90,64 @@ public class Ship_Liner extends Ship {
 	public void SetDopColor(Color color) {
 		DopColor = color;
 	}
-	
-	//преобразование информации в строку
-	public String toString()
-	 {
-	 return super.toString() + ";" + getColorName(DopColor) + ";" + Pipe + ";" +
-	SmokeFromPipe + ";" + Window;
-	 }
+
+	// преобразование информации в строку
+	public String toString() {
+		return super.toString() + ";" + getColorName(DopColor) + ";" + Pipe + ";" + SmokeFromPipe + ";" + Window;
+	}
+
+	public int compareTo(Ship_Liner another) {
+		if (another == null)
+			return 1;
+		if (MaxSpeed != another.MaxSpeed)
+			return Integer.compare(MaxSpeed, another.MaxSpeed);
+		if (Weight != another.Weight)
+			return Float.compare(Weight, another.Weight);
+		if (MainColor != another.MainColor)
+			return Integer.compare(MainColor.getRGB(), another.MainColor.getRGB());
+		if (DopColor != another.DopColor)
+			return Integer.compare(DopColor.getRGB(), another.DopColor.getRGB());
+		if (Pipe != another.Pipe)
+			return Boolean.compare(Pipe, another.Pipe);
+		if (SmokeFromPipe != another.SmokeFromPipe)
+			return Boolean.compare(SmokeFromPipe, another.SmokeFromPipe);
+		if (Window != another.Window)
+			return Boolean.compare(Window, another.Window);
+		return 0;
+	}
+
+	@Override
+	public boolean equals(Object another) {
+		if (another == null) {
+			return false;
+		}
+		if (!(another instanceof Ship_Liner)) {
+			return false;
+		}
+		Ship_Liner ship_LinerObf = (Ship_Liner) another;
+		return equals(ship_LinerObf);
+	}
+
+	public boolean equals(Ship_Liner another) {
+		if (another == null)
+			return false;
+		if (!(another instanceof Ship_Liner)) {
+			return false;
+		}
+		if (MaxSpeed != another.MaxSpeed)
+			return false;
+		if (Weight != another.Weight)
+			return false;
+		if (MainColor != another.MainColor)
+			return false;
+		if (DopColor != another.DopColor)
+			return false;
+		if (Pipe != another.Pipe)
+			return false;
+		if (SmokeFromPipe != another.SmokeFromPipe)
+			return false;
+		if (Window != another.Window)
+			return false;
+		return true;
+	}
 }

@@ -2,11 +2,12 @@ package laba;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 
 import javax.swing.JPanel;
 
-public class Ship extends Boat {
+public class Ship extends Boat implements Serializable, Comparable<Ship> {
 	// Ширина отрисовки коробля
 	private int shipWidth = 100;
 	// Высота отрисовки коробля
@@ -106,4 +107,39 @@ public class Ship extends Boat {
 	        return null;
 	    }
 	}
+	
+	 @Override
+	    public int compareTo(Ship another) {
+	        if (another == null) {
+	            return 1;
+	        }
+	        
+	        if (MaxSpeed != another.MaxSpeed) {
+	            return Integer.compare(MaxSpeed,another.MaxSpeed);
+	        }
+	        if (Weight != another.Weight) {
+	            return Float.compare(Weight,another.Weight);
+	        }
+	        if (MainColor != another.MainColor) {
+	            return Integer.compare(MainColor.getRGB(),another.MainColor.getRGB());
+	        }
+	        return 0;
+	    }
+
+	    @Override
+	    public boolean equals(Object another) {
+	        if (another == null) return false;
+	        if (!(another instanceof Ship)) return false;
+	       Ship airCraftObj = (Ship) another;
+	        return equals(airCraftObj);
+	    }
+
+	    public boolean equals(Ship another) {
+	        if (another == null) return false;
+	        if (!(another instanceof Ship)) return false;
+	        if (MaxSpeed != another.MaxSpeed) return false;
+	        if (Weight != another.Weight) return false;
+	        if (MainColor != another.MainColor) return false;
+	        return true;
+	    }
 }

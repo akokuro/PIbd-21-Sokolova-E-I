@@ -27,7 +27,6 @@ public class Window {
 	private JFrame frame;
 	public IShip ship;
 	public DrawingHelper picturePanelShip;
-	
 	/**
 	 * Create the application.
 	 * 
