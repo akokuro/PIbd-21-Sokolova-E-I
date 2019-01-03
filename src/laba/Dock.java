@@ -2,12 +2,14 @@ package laba;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.Iterator;
 
-public class Dock<T extends IShip> {
+public class Dock<T extends IShip> implements Serializable, Comparable<Dock<T>>, Iterable<T>, Iterator<T> {
 	private HashMap<Integer, T> _places;
 
 	// Размер одного места парковки по ширине.
@@ -23,6 +25,7 @@ public class Dock<T extends IShip> {
 	private int PictureHeight;
 	// Максимальное количество мест
 	private int _maxCount;
+	private int currentIndex;
 
 	// Конструктор дока.
 	public Dock(int size, int pictureWidth, int pictureHeight) {
@@ -33,21 +36,22 @@ public class Dock<T extends IShip> {
 	}
 
 	// Оператор "+": поставить корабль
-	public int Add(T ship) throws DockOverFlowException {
+	public int Add(T ship) throws DockOverFlowException, DockAlreadyHaveException {
 		if (_places.size() == _maxCount) {
 			throw new DockOverFlowException();
 		}
-
-		for (int i = 0; i < _maxCount; i++) {
-			if (CheckFreePlace(i)) {
-				_places.put(i, ship);
-				_places.get(i).SetPosition(5 + i / 5 * _placeSizeWidth + 5,
-						i % 5 * _placeSizeHeight + _placeSizeHeight - 4, PictureWidth, PictureHeight);
-
-				return i;
-			}
+		int index = _places.size();
+		for (int i = 0; i < _places.size(); i++) {
+			if (CheckFreePlace(i))
+				index = i;
+			if (_places.containsValue(ship))
+				throw new DockAlreadyHaveException();
 		}
-		return -1;
+		_places.put(index, ship);
+		_places.get(index).SetPosition(5 + index / 5 * _placeSizeWidth + 5,
+				index % 5 * _placeSizeHeight + _placeSizeHeight - 4, PictureWidth, PictureHeight);
+		return index;
+
 	}
 
 	// Оператор "-": забрать корабль
@@ -98,12 +102,67 @@ public class Dock<T extends IShip> {
 
 	public void setAt(int index, T ship) throws DockOccupiedPlaceException {
 		if (CheckFreePlace(index)) {
-			ship.SetPosition(5 + index / 5 * _placeSizeWidth + 5, index % 5 * _placeSizeHeight + 80,
-					PictureWidth, PictureHeight);
+			ship.SetPosition(5 + index / 5 * _placeSizeWidth + 5, index % 5 * _placeSizeHeight + 80, PictureWidth,
+					PictureHeight);
 			_places.put(index, ship);
-		}
-		else {
+		} else {
 			throw new DockOccupiedPlaceException(index);
 		}
+	}
+
+	@Override
+	public boolean hasNext() {
+		if (currentIndex + 1 >= _places.size()) {
+			currentIndex = -1;
+			return false;
+		}
+		currentIndex++;
+		return true;
+	}
+
+	@Override
+	public T next() {
+		return (T) _places.get(currentIndex);
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		 return this;
+	}
+
+	@Override
+	public int compareTo(Dock<T> other) {
+		 if (this._places.size() > other._places.size()) {
+	            return -1;
+	        } else if (this._places.size() < other._places.size()) {
+	            return 1;
+	        } else {
+	            Integer[] thisKeys = this._places.keySet().toArray(new Integer[this._places.size()]);
+	            Integer[] otherKeys = other._places.keySet().toArray(new Integer[other._places.size()]);
+	            for (int i = 0; i < this._places.size(); i++) {
+	                if (this._places.get(thisKeys[i]).getClass().equals( Ship.class)
+	                        && other._places.get(otherKeys[i]).getClass().equals( Ship_Liner.class)) {
+	                    return 1;
+	                }
+	                if (this._places.get(thisKeys[i]).getClass().equals( Ship_Liner.class)
+	                        && other._places.get(otherKeys[i]).getClass().equals( Ship.class)) {
+	                    return -1;
+	                }
+	                if (this._places.get(thisKeys[i]).getClass().equals( Ship.class)
+	                        && other._places.get(otherKeys[i]).getClass().equals( Ship.class)) {
+	                    return (( Ship) this._places.get(thisKeys[i])).compareTo(( Ship) other._places.get(otherKeys[i]));
+	                }
+	                if (this._places.get(thisKeys[i]).getClass().equals( Ship_Liner.class)
+	                        && other._places.get(otherKeys[i]).getClass().equals( Ship_Liner.class)) {
+	                    return (( Ship_Liner) this._places.get(thisKeys[i]))
+							.compareTo((Ship_Liner) other._places.get(otherKeys[i]));
+	                }
+	            }
+	        }
+	        return 0;
+	}
+
+	private void reset() {
+		currentIndex = -1;
 	}
 }

@@ -54,6 +54,7 @@ public class FormDock {
 	private JMenuItem menuItem_Load;
 	private static Logger logger = Logger.getLogger(FormDock.class.getName());
 	private static int place;
+
 	/**
 	 * Launch the application.
 	 */
@@ -82,7 +83,7 @@ public class FormDock {
 		initialize();
 	}
 
-	public void getShip() throws DockOverFlowException {
+	public void getShip() throws DockOverFlowException, DockAlreadyHaveException {
 		select = new FormShipConfig(frame);
 		if (select.res()) {
 			IShip ship = select.ship;
@@ -132,6 +133,8 @@ public class FormDock {
 					panel_Dock.repaint();
 				} catch (DockOverFlowException e) {
 					JOptionPane.showMessageDialog(null, "Переполнение", "Результат", JOptionPane.INFORMATION_MESSAGE);
+				} catch (DockAlreadyHaveException e) {
+					JOptionPane.showMessageDialog(null, "Такой корабль уже есть в доке", "Результат", JOptionPane.INFORMATION_MESSAGE);
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, "Неизвестная ошибка", "Результат",
 							JOptionPane.INFORMATION_MESSAGE);
@@ -190,6 +193,18 @@ public class FormDock {
 		});
 		button_Take.setBounds(865, 311, 89, 23);
 		frame.getContentPane().add(button_Take);
+
+		JButton buttonSort = new JButton("\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C");
+		buttonSort.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dock.Sort();
+				panel_Dock.repaint();
+				panel_Dock.Docker = dock.getAt(0);
+				logger.info("Сортировка уровней");
+			}
+		});
+		buttonSort.setBounds(834, 174, 135, 37);
+		frame.getContentPane().add(buttonSort);
 
 		menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);

@@ -61,24 +61,20 @@ public class MultiLevelDock {
 		for (Dock<IShip> level : dockStages) {
 			// Начинаем уровень
 			WriteToFile("Level" + "\r\n", fs);
-			for (int i = 0; i < countPlaces; i++) {
-				try {
-					IShip ship = level.getAt(i);
-					if (ship != null) {
-						// если место не пустое
-						// Записываем тип корабля
-						if (ship instanceof Ship_Liner) {
-							WriteToFile(i + ":Ship_Liner:", fs);
-						} else if (ship instanceof Ship) {
-							WriteToFile(i + ":Ship:", fs);
-						}
-
-						// Записываемые параметры
-						System.out.println(ship.toString() + "\r\n");
-						WriteToFile(ship.toString() + "\r\n", fs);
-
+			for (IShip ship : level) {
+				if (ship != null) {
+					// если место не пустое
+					// Записываем тип корабля
+					if (ship instanceof Ship_Liner) {
+						WriteToFile(":Ship_Liner:", fs);
+					} else if (ship instanceof Ship) {
+						WriteToFile(":Ship:", fs);
 					}
-				} finally {
+
+					// Записываемые параметры
+					System.out.println(ship.toString() + "\r\n");
+					WriteToFile(ship.toString() + "\r\n", fs);
+
 				}
 			}
 		}
@@ -142,5 +138,10 @@ public class MultiLevelDock {
 			}
 			dockStages.get(counter).setAt(Integer.parseInt(strs[k].split(":", 0)[0]), ship);
 		}
+	}
+
+	// Сортировка уровней
+	public void Sort() {
+		dockStages.sort(null);
 	}
 }
